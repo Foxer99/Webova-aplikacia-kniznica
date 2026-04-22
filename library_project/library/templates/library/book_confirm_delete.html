@@ -1,0 +1,8 @@
+<h1>Naozaj chceš zmazať {{ book.title }}?</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Áno</button>
+</form>
+
+<a href="/">Zrušiť</a>

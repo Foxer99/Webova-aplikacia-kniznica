@@ -1,8 +1,21 @@
 <h1>{{ book.title }}</h1>
 
-<p>ISBN: {{ book.isbn }}</p>
-<p>Rok: {{ book.year }}</p>
-<p>Žáner: {{ book.genre }}</p>
+<p><b>ISBN:</b> {{ book.isbn }}</p>
+<p><b>Rok:</b> {{ book.year }}</p>
+<p><b>Žáner:</b> {{ book.genre }}</p>
+<p><b>Počet kusov:</b> {{ book.total_copies }}</p>
+<p><b>Dostupná:</b> {{ book.available }}</p>
+
+<h3>Autori:</h3>
+<ul>
+{% for author in book.authors.all %}
+    <li>{{ author.first_name }} {{ author.last_name }}</li>
+{% empty %}
+    <li>Žiadni autori</li>
+{% endfor %}
+</ul>
+
+<br>
 
 <a href="{% url 'book_update' book.pk %}">Upraviť</a>
 <a href="{% url 'book_delete' book.pk %}">Zmazať</a>
