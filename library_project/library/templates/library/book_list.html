@@ -1,0 +1,13 @@
+<h1>Knihy</h1>
+
+<a href="{% url 'book_create' %}">Pridať knihu</a>
+
+<ul>
+{% for book in books %}
+    <li>
+        <a href="{% url 'book_detail' book.pk %}">
+            {{ book.title }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
