@@ -1,4 +1,4 @@
-<h1>Formulár</h1>
+<h1>Formulár knihy</h1>
 
 <form method="post">
     {% csrf_token %}
@@ -6,4 +6,6 @@
     <button type="submit">Uložiť</button>
 </form>
 
-<a href="/">Späť</a>
+<br>
+
+<a href="{% url 'book_list' %}">Späť na zoznam</a>

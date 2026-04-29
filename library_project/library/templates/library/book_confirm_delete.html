@@ -1,8 +1,9 @@
-<h1>Naozaj chceš zmazať {{ book.title }}?</h1>
+<h1>Naozaj chceš zmazať knihu: {{ book.title }}?</h1>
 
 <form method="post">
     {% csrf_token %}
-    <button type="submit">Áno</button>
+    <button type="submit">Áno, zmazať</button>
 </form>
 
-<a href="/">Zrušiť</a>
+<a href="{% url 'book_detail' book.pk %}">Zrušiť</a>
+<a href="{% url 'book_list' %}">Späť na zoznam</a>

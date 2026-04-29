@@ -3,8 +3,8 @@
 <p><b>ISBN:</b> {{ book.isbn }}</p>
 <p><b>Rok:</b> {{ book.year }}</p>
 <p><b>Žáner:</b> {{ book.genre }}</p>
-<p><b>Počet kusov:</b> {{ book.total_copies }}</p>
-<p><b>Dostupná:</b> {{ book.available }}</p>
+<p><b>Celkom kusov:</b> {{ book.total_copies }}</p>
+<p><b>Dostupné kusy:</b> {{ book.available_copies }}</p>
 
 <h3>Autori:</h3>
 <ul>
@@ -16,6 +16,14 @@
 </ul>
 
 <br>
+
+{% if book.available_copies > 0 %}
+    <a href="{% url 'borrow_book' book.pk %}">📚 Požičať knihu</a>
+{% else %}
+    <p style="color:red;">❌ Kniha nie je dostupná</p>
+{% endif %}
+
+<br><br>
 
 <a href="{% url 'book_update' book.pk %}">Upraviť</a>
 <a href="{% url 'book_delete' book.pk %}">Zmazať</a>

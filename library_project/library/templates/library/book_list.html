@@ -1,13 +1,37 @@
 <h1>Knihy</h1>
 
-<a href="{% url 'book_create' %}">Pridať knihu</a>
+<a href="{% url 'book_create' %}">➕ Pridať knihu</a>
 
+<br><br>
+
+<!-- FILTER FORM -->
+<form method="get">
+    <input type="text" name="genre" placeholder="Žáner">
+    <input type="text" name="author" placeholder="Autor (priezvisko)">
+
+    <select name="available">
+        <option value="">Všetky knihy</option>
+        <option value="1">Len dostupné</option>
+    </select>
+
+    <button type="submit">Filtrovať</button>
+</form>
+
+<hr>
+
+<!-- LIST -->
 <ul>
 {% for book in books %}
     <li>
         <a href="{% url 'book_detail' book.pk %}">
             {{ book.title }}
         </a>
+
+        {% if book.available_copies > 0 %}
+            <span style="color:green;">✔ dostupná</span>
+        {% else %}
+            <span style="color:red;">❌ vypožičaná</span>
+        {% endif %}
     </li>
 {% endfor %}
 </ul>

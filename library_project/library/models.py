@@ -18,7 +18,7 @@ class Book(models.Model):
     year = models.IntegerField()
     genre = models.CharField(max_length=100)
     total_copies = models.IntegerField()
-    available = models.BooleanField(default=True)
+    available_copies = models.IntegerField(default=0)
 
     # M:N vzťah
     authors = models.ManyToManyField(Author)
