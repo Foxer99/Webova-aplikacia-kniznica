@@ -1,0 +1,31 @@
+<h1>Výpožičky</h1>
+
+<table border="1">
+<tr>
+    <th>Kniha</th>
+    <th>Používateľ</th>
+    <th>Požičané</th>
+    <th>Vrátiť do</th>
+    <th>Vrátené</th>
+    <th>Akcia</th>
+</tr>
+
+{% for loan in loans %}
+<tr>
+    <td>{{ loan.book.title }}</td>
+    <td>{{ loan.user.username }}</td>
+    <td>{{ loan.loan_date }}</td>
+    <td>{{ loan.return_due }}</td>
+    <td>{{ loan.returned_at|default:"Nie" }}</td>
+    <td>
+        {% if not loan.returned_at %}
+            <a href="{% url 'return_book' loan.id %}">Vrátiť</a>
+        {% endif %}
+
+        {% if user.is_staff %}
+            <a href="{% url 'loan_delete' loan.id %}">Zmazať</a>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>

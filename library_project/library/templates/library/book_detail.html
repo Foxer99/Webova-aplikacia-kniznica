@@ -25,6 +25,10 @@
 
 <br><br>
 
-<a href="{% url 'book_update' book.pk %}">Upraviť</a>
-<a href="{% url 'book_delete' book.pk %}">Zmazať</a>
-<a href="/">Späť</a>
+
+
+{% if user.is_staff %}
+    <a href="{% url 'book_delete' book.id %}">Zmazať</a>
+    <a href="{% url 'book_update' book.pk %}">Upraviť</a>
+    <a href="/">Späť</a>
+{% endif %}
