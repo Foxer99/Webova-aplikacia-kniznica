@@ -2,9 +2,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 
 from .models import Book, Loan, Author, Loan 
 from .forms import BookForm, AuthorForm  
+
+
+
+def is_admin(user):
+    return user.is_staff
+
 
 
 # ---------------- BOOKS ----------------
@@ -39,6 +46,7 @@ def book_detail(request, pk):
 
 
 @login_required
+@user_passes_test(is_admin)
 def book_create(request):
     form = BookForm(request.POST or None)
     if form.is_valid():
@@ -48,6 +56,7 @@ def book_create(request):
 
 
 @login_required
+@user_passes_test(is_admin)
 def book_update(request, pk):
     book = get_object_or_404(Book, pk=pk)
     form = BookForm(request.POST or None, instance=book)
@@ -58,6 +67,7 @@ def book_update(request, pk):
 
 
 @login_required
+@user_passes_test(is_admin)
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -90,7 +100,7 @@ def return_book(request, loan_id):
     loan = get_object_or_404(Loan, id=loan_id)
 
     if loan.user == request.user and not loan.returned_at:
-        loan.returned_at = timezone.now()
+        loan.returned_at = timezone.now().date()
         loan.save()
 
         book = loan.book

@@ -19,6 +19,8 @@ urlpatterns = [
     path("loans/", views.loan_list, name="loan_list"),
     path("loans/<int:pk>/delete/", views.loan_delete, name="loan_delete"),
     path('my-loans/', views.my_loans, name='my_loans'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='library/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+   
 ]

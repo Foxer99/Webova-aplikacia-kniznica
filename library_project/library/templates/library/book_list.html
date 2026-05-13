@@ -1,6 +1,7 @@
 <h1>Knihy</h1>
-
+{% if user.is_staff %}
 <a href="{% url 'book_create' %}">➕ Pridať knihu</a>
+{% endif %}
 
 <br><br>
 
@@ -21,6 +22,32 @@
     <input type="number" name="year" placeholder="Rok vydania">
     <button type="submit">Filter</button>
 </form>
+    {% if user.is_authenticated %}
+    <p>Prihlásený: {{ user.username }}</p>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Odhlásiť</button>
+    </form>
+
+    {% else %}
+    <a href="{% url 'login' %}">Prihlásiť</a>
+    {% endif %}
+
+    <ul>
+        {% for book in books %}
+            <li>
+                <a href="{% url 'book_detail' book.pk %}">
+                    {{ book.title }}
+                </a>
+        
+                {% if user.is_staff %}
+                    <a href="{% url 'book_update' book.pk %}">Edit</a>
+                    <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
 
 <hr>
 
