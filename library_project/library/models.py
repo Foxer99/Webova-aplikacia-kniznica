@@ -20,6 +20,8 @@ class Book(models.Model):
     total_copies = models.IntegerField()
     available_copies = models.IntegerField(default=0)
 
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
+
     # M:N vzťah
     authors = models.ManyToManyField(Author)
 

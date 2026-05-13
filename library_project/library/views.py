@@ -1,31 +1,29 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from datetime import timedelta
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import Book, Loan, Author, Loan 
-from .forms import BookForm, AuthorForm  
-
+from .models import Book, Loan, Author
+from .forms import BookForm, AuthorForm
 
 
+# ---------------- PERMISSIONS ----------------
 def is_admin(user):
     return user.is_staff
-
 
 
 # ---------------- BOOKS ----------------
 @login_required
 def book_list(request):
     books = Book.objects.all()
+
     year = request.GET.get("year")
-
-    if year:
-        books = books.filter(year=year)
-
     genre = request.GET.get("genre")
     author = request.GET.get("author")
     available = request.GET.get("available")
+
+    if year:
+        books = books.filter(year=year)
 
     if genre:
         books = books.filter(genre__icontains=genre)
@@ -37,7 +35,6 @@ def book_list(request):
         books = books.filter(available_copies__gt=0)
 
     return render(request, 'library/book_list.html', {'books': books})
-  
 
 
 def book_detail(request, pk):
@@ -48,7 +45,7 @@ def book_detail(request, pk):
 @login_required
 @user_passes_test(is_admin)
 def book_create(request):
-    form = BookForm(request.POST or None)
+    form = BookForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         return redirect('book_list')
@@ -59,7 +56,7 @@ def book_create(request):
 @user_passes_test(is_admin)
 def book_update(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    form = BookForm(request.POST or None, instance=book)
+    form = BookForm(request.POST or None, request.FILES or None, instance=book)
     if form.is_valid():
         form.save()
         return redirect('book_detail', pk=pk)
@@ -77,7 +74,6 @@ def book_delete(request, pk):
 
 
 # ---------------- LOANS ----------------
-
 @login_required
 def borrow_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
@@ -111,15 +107,13 @@ def return_book(request, loan_id):
 
 
 # ---------------- HISTORY ----------------
-
 @login_required
 def my_loans(request):
     loans = Loan.objects.filter(user=request.user)
     return render(request, 'library/my_loans.html', {'loans': loans})
 
 
-
-#-----------Autori--------------------
+# ---------------- AUTHORS ----------------
 def author_list(request):
     authors = Author.objects.all()
     return render(request, "authors/author_list.html", {"authors": authors})
@@ -150,9 +144,7 @@ def author_delete(request, pk):
     return render(request, "authors/author_confirm_delete.html", {"author": author})
 
 
-#----------------------Loan-----------------------
-
-
+# ---------------- LOANS ADMIN/LIST ----------------
 @login_required
 def loan_list(request):
     if request.user.is_staff:
@@ -167,7 +159,7 @@ def loan_list(request):
 def loan_delete(request, pk):
     loan = get_object_or_404(Loan, pk=pk)
 
-    if request.user.is_staff:  # len admin môže mazať
+    if request.user.is_staff:
         loan.delete()
 
     return redirect("loan_list")
