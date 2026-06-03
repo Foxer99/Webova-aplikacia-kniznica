@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Delete account{% else %}Zmazať konto{% endif %}{% endblock %}
+{% block content %}
+<div class="card center-menu"><h1>{% if request.session.lang == 'en' %}Delete account?{% else %}Zmazať konto?{% endif %}</h1><p>{% if request.session.lang == 'en' %}Do you really want to delete user{% else %}Naozaj chceš zmazať používateľa{% endif %} <strong>{{ account.username }}</strong>?</p><form method="post">{% csrf_token %}<button type="submit" class="btn btn-delete">{% if request.session.lang == 'en' %}Yes, delete{% else %}Áno, zmazať{% endif %}</button><a href="{% url 'admin_accounts' %}" class="btn btn-secondary">{% if request.session.lang == 'en' %}Cancel{% else %}Zrušiť{% endif %}</a></form></div>
+{% endblock %}

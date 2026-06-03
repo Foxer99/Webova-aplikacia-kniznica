@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Edit profile{% else %}Upraviť profil{% endif %}{% endblock %}
+{% block content %}
+<div class="card profile-edit-card">
+    <h1>{% if request.session.lang == 'en' %}Edit profile{% else %}Upraviť profil{% endif %}</h1>
+    <form method="post" class="profile-edit-form" novalidate>{% csrf_token %}
+        {% if submitted and form.errors %}<div class="form-errors">{% if request.session.lang == 'en' %}Check the form requirements and fix the marked fields.{% else %}Skontroluj požiadavky vo formulári a oprav označené polia.{% endif %}</div>{% endif %}
+        {{ form.username }}{{ form.username.errors }}
+        {{ form.first_name }}{{ form.first_name.errors }}
+        {{ form.last_name }}{{ form.last_name.errors }}
+        {{ form.email }}{{ form.email.errors }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Save{% else %}Uložiť{% endif %}</button>
+            <a href="{% url 'profile' %}" class="btn btn-add">{% if request.session.lang == 'en' %}Back{% else %}Späť{% endif %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

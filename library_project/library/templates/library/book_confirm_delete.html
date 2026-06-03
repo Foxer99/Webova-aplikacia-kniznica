@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Delete book{% else %}Zmazať knihu{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}Delete book{% else %}Zmazať knihu{% endif %}</h1>
+<div class="card center-menu">
+    <p style="font-size:18px;">{% if request.session.lang == 'en' %}Do you really want to delete the book{% else %}Naozaj chceš zmazať knihu{% endif %} <strong>{{ book.title }}</strong>?</p>
+    <form method="post">{% csrf_token %}
+        <button type="submit" class="btn btn-delete">{% if request.session.lang == 'en' %}Yes, delete{% else %}Áno, zmazať{% endif %}</button>
+        <a href="{% url 'book_detail' book.pk %}" class="btn btn-secondary">{% if request.session.lang == 'en' %}Cancel{% else %}Zrušiť{% endif %}</a>
+    </form>
+</div>
+{% endblock %}

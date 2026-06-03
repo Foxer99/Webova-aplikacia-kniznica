@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Register{% else %}Registrovať{% endif %}{% endblock %}
+{% block content %}
+<div class="card auth-card">
+    <h1>{% if request.session.lang == 'en' %}Register{% else %}Registrovať{% endif %}</h1>
+    <form method="post" class="auth-form" novalidate>{% csrf_token %}
+        {{ form.username }}{{ form.username.errors }}
+        {{ form.email }}{{ form.email.errors }}
+        {{ form.password1 }}{{ form.password1.errors }}
+        {{ form.password2 }}{{ form.password2.errors }}
+        {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Register{% else %}Registrovať{% endif %}</button>
+            <a href="{% url 'login' %}" class="btn btn-add">{% if request.session.lang == 'en' %}Back to login{% else %}Späť na login{% endif %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

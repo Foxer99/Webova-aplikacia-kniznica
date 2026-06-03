@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ author.first_name }} {{ author.last_name }}{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ author.first_name }} {{ author.last_name }}</h1>
+    <p><strong>{% if request.session.lang == 'en' %}Country{% else %}Krajina{% endif %}:</strong> {{ author.country|default:'-' }}</p>
+    <p><strong>{% if request.session.lang == 'en' %}Birth date{% else %}Dátum narodenia{% endif %}:</strong> {{ author.birth_date|default:'-' }}</p>
+    <p><strong>{% if request.session.lang == 'en' %}Description / biography{% else %}Popis / životopis{% endif %}:</strong></p>
+    <p>{{ author.description|default:'-'|linebreaks }}</p>
+    <h2>{% if request.session.lang == 'en' %}Author books{% else %}Knihy autora{% endif %}</h2>
+    <ul>{% for book in author.book_set.all %}<li><a href="{% url 'book_detail' book.pk %}" class="book-author-link">{{ book.title }}</a> ({{ book.year }})</li>{% empty %}<li>{% if request.session.lang == 'en' %}This author has no assigned books yet.{% else %}Autor zatiaľ nemá priradené knihy.{% endif %}</li>{% endfor %}</ul>
+    {% if user.is_staff %}<a href="{% url 'author_update' author.pk %}" class="btn btn-edit">{% if request.session.lang == 'en' %}Edit author{% else %}Upraviť autora{% endif %}</a>{% endif %}<a href="{% url 'author_list' %}" class="btn btn-secondary">{% if request.session.lang == 'en' %}Back{% else %}Späť{% endif %}</a>
+</div>
+{% endblock %}

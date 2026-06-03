@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Edit account{% else %}Upraviť konto{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}Edit account{% else %}Upraviť konto{% endif %}: {{ account.username }}</h1>
+<div class="card form-card center-menu"><form method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Save{% else %}Uložiť{% endif %}</button><a href="{% url 'admin_accounts' %}" class="btn btn-add">{% if request.session.lang == 'en' %}Back{% else %}Späť{% endif %}</a></div></form></div>
+{% endblock %}

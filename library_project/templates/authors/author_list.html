@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Authors{% else %}Autori{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}Authors{% else %}Autori{% endif %}</h1>
+<div class="card">
+    <form method="get" class="filter-form author-filter-box">
+        <input type="text" name="q" placeholder="{% if request.session.lang == 'en' %}Search specific author{% else %}Hľadať konkrétneho autora{% endif %}" value="{{ q }}">
+        <button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Search{% else %}Hľadať{% endif %}</button>
+    </form>
+</div>
+<div class="card"><table><tr><th>{% if request.session.lang == 'en' %}Author name{% else %}Meno autora{% endif %}</th><th>{% if request.session.lang == 'en' %}Borrowed books count{% else %}Počet vypožičaných kníh{% endif %}</th>{% if user.is_staff %}<th>{% if request.session.lang == 'en' %}Action{% else %}Akcia{% endif %}</th>{% endif %}</tr>{% for author in authors %}<tr><td><a href="{% url 'author_detail' author.id %}" class="author-link">{{ author.first_name }} {{ author.last_name }}</a></td><td>{{ author.borrow_count }}</td>{% if user.is_staff %}<td><a href="{% url 'author_update' author.id %}" class="btn btn-edit">{% if request.session.lang == 'en' %}Edit{% else %}Upraviť{% endif %}</a><a href="{% url 'author_delete' author.id %}" class="btn btn-delete">{% if request.session.lang == 'en' %}Delete{% else %}Zmazať{% endif %}</a></td>{% endif %}</tr>{% empty %}<tr><td colspan="3" style="text-align:center;">{% if request.session.lang == 'en' %}No authors.{% else %}Žiadni autori.{% endif %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}Add book{% else %}Pridať knihu{% endif %}</h1>
+<div class="card form-card center-menu">
+    <form method="post" enctype="multipart/form-data" class="book-form" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+
+        {{ form.title }}{{ form.title.errors }}
+        {{ form.isbn }}{{ form.isbn.errors }}
+        {{ form.genre }}{{ form.genre.errors }}
+        {{ form.year }}{{ form.year.errors }}
+        {{ form.total_copies }}{{ form.total_copies.errors }}
+
+        <div class="author-picker">
+            {{ form.author_search }}
+            {{ form.authors }}{{ form.authors.errors }}
+        </div>
+
+        <div class="cover-picker">
+            <strong>{% if request.session.lang == 'en' %}Book cover{% else %}Obálka knihy{% endif %}</strong>
+            <label for="id_cover_image" class="btn btn-add file-button">{% if request.session.lang == 'en' %}Choose file{% else %}Vybrať súbor{% endif %}</label>
+            <span id="cover-file-name" class="file-name"></span>
+            {{ form.cover_image }}{{ form.cover_image.errors }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Save{% else %}Uložiť{% endif %}</button>
+            <a href="{% url 'book_list' %}" class="btn btn-add">{% if request.session.lang == 'en' %}Back to list{% else %}Späť na zoznam{% endif %}</a>
+        </div>
+    </form>
+</div>
+<script>
+const search = document.getElementById('id_author_search');
+const select = document.getElementById('id_authors');
+if (search && select) {
+    search.addEventListener('input', function () {
+        const value = this.value.toLowerCase();
+        Array.from(select.options).forEach(option => {
+            option.hidden = !option.text.toLowerCase().includes(value);
+        });
+    });
+    select.addEventListener('change', function () {
+        const chosen = Array.from(select.selectedOptions).map(option => option.text).join(', ');
+        if (chosen) search.value = chosen;
+    });
+    select.addEventListener('click', function (event) {
+        if (event.target && event.target.tagName === 'OPTION') {
+            search.value = event.target.text;
+        }
+    });
+}
+const isbn = document.getElementById('id_isbn');
+if (isbn) {
+    isbn.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 13);
+    });
+}
+const coverInput = document.getElementById('id_cover_image');
+const coverName = document.getElementById('cover-file-name');
+if (coverInput && coverName) {
+    coverInput.addEventListener('change', function () {
+        coverName.textContent = this.files && this.files.length ? this.files[0].name : '';
+    });
+}
+</script>
+{% endblock %}

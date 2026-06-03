@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}My books{% else %}Moje knihy{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}My books{% else %}Moje knihy{% endif %}</h1>
+
+<div class="card center-menu">
+    <a href="{% url 'my_loans' %}?status=borrowed" class="btn {% if status == 'borrowed' %}btn-add{% else %}btn-secondary{% endif %}">{% if request.session.lang == 'en' %}Borrowed books{% else %}Požičané knihy{% endif %}</a>
+    <a href="{% url 'my_loans' %}?status=returned" class="btn {% if status == 'returned' %}btn-add{% else %}btn-secondary{% endif %}">{% if request.session.lang == 'en' %}Returned books{% else %}Vrátené knihy{% endif %}</a>
+</div>
+
+<div class="card">
+    <table>
+        <tr>
+            <th>{% if request.session.lang == 'en' %}Book{% else %}Kniha{% endif %}</th>
+            <th>{% if request.session.lang == 'en' %}Borrowed{% else %}Požičané{% endif %}</th>
+            <th>{% if request.session.lang == 'en' %}Returned{% else %}Vrátené{% endif %}</th>
+            <th>{% if request.session.lang == 'en' %}Action{% else %}Akcia{% endif %}</th>
+        </tr>
+        {% for loan in loans %}
+        <tr>
+            <td><a href="{% url 'book_detail' loan.book.pk %}">{{ loan.book.title }}</a></td>
+            <td>{{ loan.borrowed_at }}</td>
+            <td>{% if loan.returned_at %}<span class="available">{{ loan.returned_at }}</span>{% else %}<span class="unavailable">{% if request.session.lang == 'en' %}No{% else %}Nie{% endif %}</span>{% endif %}</td>
+            <td>{% if not loan.returned_at %}<a href="{% url 'return_book' loan.id %}" class="btn btn-add">{% if request.session.lang == 'en' %}Return{% else %}Vrátiť{% endif %}</a>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center;">{% if request.session.lang == 'en' %}No books in this section.{% else %}Žiadne knihy v tejto sekcii.{% endif %}</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

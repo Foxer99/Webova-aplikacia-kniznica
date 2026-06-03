@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{% if request.session.lang == 'en' %}Profile{% else %}Profil{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.session.lang == 'en' %}User profile{% else %}Profil používateľa{% endif %}</h1>
+<div class="card center-menu">
+    <p><strong>{% if request.session.lang == 'en' %}Username{% else %}Používateľské meno{% endif %}:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {% if user.email %}{{ user.email }}{% else %}{% if request.session.lang == 'en' %}Not entered{% else %}Nezadaný{% endif %}{% endif %}</p>
+    <p><strong>{% if request.session.lang == 'en' %}First name{% else %}Meno{% endif %}:</strong> {% if user.first_name %}{{ user.first_name }}{% else %}{% if request.session.lang == 'en' %}Not entered{% else %}Nezadané{% endif %}{% endif %}</p>
+    <p><strong>{% if request.session.lang == 'en' %}Last name{% else %}Priezvisko{% endif %}:</strong> {% if user.last_name %}{{ user.last_name }}{% else %}{% if request.session.lang == 'en' %}Not entered{% else %}Nezadané{% endif %}{% endif %}</p>
+    <div style="margin:18px 0;">
+        <strong>{% if request.session.lang == 'en' %}Theme{% else %}Režim{% endif %}:</strong>
+        <a href="{% url 'set_theme' 'light' %}" class="btn btn-secondary">{% if request.session.lang == 'en' %}Light{% else %}Svetlý{% endif %}</a>
+        <a href="{% url 'set_theme' 'dark' %}" class="btn btn-secondary">{% if request.session.lang == 'en' %}Dark{% else %}Tmavý{% endif %}</a>
+    </div>
+    <a href="{% url 'profile_edit' %}" class="btn btn-edit">{% if request.session.lang == 'en' %}Edit profile{% else %}Upraviť profil{% endif %}</a>
+    <form method="post" action="{% url 'logout' %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-delete">{% if request.session.lang == 'en' %}Log out{% else %}Odhlásiť{% endif %}</button></form>
+</div>
+{% endblock %}

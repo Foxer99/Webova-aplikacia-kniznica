@@ -1,0 +1,15 @@
+Nastavenie pre Render.com
+
+Odporucane nastavenie:
+Root Directory: library_project
+Build Command: ./build.sh
+Start Command: gunicorn library_project.wsgi:application
+
+Ak Root Directory NEnastavis, pouzi:
+Build Command: ./build.sh
+Start Command: cd library_project && gunicorn library_project.wsgi:application
+
+Environment Variables:
+DEBUG=False
+ALLOWED_HOSTS=.onrender.com,localhost,127.0.0.1
+SECRET_KEY=vygeneruj dlhy tajny retazec

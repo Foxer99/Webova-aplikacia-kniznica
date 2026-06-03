@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if request.session.lang == 'en' %}Books{% else %}Knihy{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if request.GET.popular == '1' %}{% if request.session.lang == 'en' %}Most borrowed books{% else %}Najpožičiavanejšie knihy{% endif %}{% else %}{% if request.session.lang == 'en' %}Library{% else %}Knižnica{% endif %}{% endif %}</h1>
+
+<div class="top-bar center-menu">
+    <div>
+        {% if user.is_staff %}
+            <a href="{% url 'book_create' %}" class="btn btn-add">➕ {% if request.session.lang == 'en' %}Add book{% else %}Pridať knihu{% endif %}</a>
+            <a href="{% url 'author_create' %}" class="btn btn-add">➕ {% if request.session.lang == 'en' %}Add author{% else %}Pridať autora{% endif %}</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if request.GET.popular != '1' %}
+<div class="card">
+    <form method="get" class="filter-form">
+        <select name="genre">
+            <option value="">{% if request.session.lang == 'en' %}Genre{% else %}Žáner{% endif %}</option>
+            {% for genre in genres %}<option value="{{ genre }}" {% if selected_genre == genre %}selected{% endif %}>{{ genre }}</option>{% endfor %}
+        </select>
+        <input type="text" name="title" placeholder="{% if request.session.lang == 'en' %}Book title{% else %}Názov knihy{% endif %}" value="{% if title_query %}{{ title_query }}{% endif %}">
+        <input type="text" name="author" placeholder="{% if request.session.lang == 'en' %}Author name{% else %}Meno autora{% endif %}" value="{% if author_query %}{{ author_query }}{% endif %}">
+        <input type="text" name="year" list="year-options" placeholder="{% if request.session.lang == 'en' %}Publication year{% else %}Rok vydania{% endif %}{% if oldest_year %} (od {{ oldest_year }}){% endif %}" value="{% if selected_year %}{{ selected_year }}{% endif %}" inputmode="numeric" pattern="[0-9]*">
+        <datalist id="year-options">{% for y in years %}<option value="{{ y }}">{% endfor %}</datalist>
+        <button type="submit" class="btn btn-add">{% if request.session.lang == 'en' %}Filter{% else %}Filtrovať{% endif %}</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="book-list">
+    {% for book in books %}
+        <article class="book-card">
+            <a href="{% url 'book_detail' book.pk %}" class="book-cover-link" title="{% if request.session.lang == 'en' %}Open book detail{% else %}Otvoriť detail knihy{% endif %} {{ book.title }}">
+                {% if book.cover_image %}<img src="{{ book.cover_image.url }}" alt="{% if request.session.lang == 'en' %}Book cover{% else %}Obálka knihy{% endif %} {{ book.title }}" class="book-cover">{% else %}{% if request.session.theme == 'dark' %}{% if request.session.lang == 'en' %}<img src="{% static 'img/no-cover-en-dark.png' %}" alt="The book cover is not available" class="book-cover no-cover-img">{% else %}<img src="{% static 'img/no-cover-sk-dark.png' %}" alt="Obálka knihy nie je k dispozícii" class="book-cover no-cover-img">{% endif %}{% else %}{% if request.session.lang == 'en' %}<img src="{% static 'img/no-cover-en-light.png' %}" alt="The book cover is not available" class="book-cover no-cover-img">{% else %}<img src="{% static 'img/no-cover-sk-light.png' %}" alt="Obálka knihy nie je k dispozícii" class="book-cover no-cover-img">{% endif %}{% endif %}{% endif %}
+            </a>
+            <a href="{% url 'book_detail' book.pk %}" class="book-title">{{ book.title }}</a>
+            {% if request.GET.popular == '1' %}<div class="book-meta">{% if request.session.lang == 'en' %}Borrowed total:{% else %}Požičané spolu:{% endif %} {{ book.loan_count }}</div>{% endif %}
+            {% if book.computed_available_copies > 0 %}<p class="available">✔ {% if request.session.lang == 'en' %}Available:{% else %}Dostupná:{% endif %} {{ book.computed_available_copies }} {% if request.session.lang == 'en' %}pcs{% else %}ks{% endif %}</p>{% else %}<p class="unavailable">❌ {% if request.session.lang == 'en' %}Borrowed{% else %}Vypožičaná{% endif %}</p>{% endif %}
+        </article>
+    {% empty %}<div class="card">{% if request.session.lang == 'en' %}No books found.{% else %}Žiadne knihy neboli nájdené.{% endif %}</div>{% endfor %}
+</div>
+{% endblock %}
